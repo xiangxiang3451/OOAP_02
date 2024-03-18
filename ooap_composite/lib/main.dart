@@ -115,8 +115,8 @@ class UniversityStructurePage extends StatelessWidget {
                 'OOAP',
                 'Computer Science',
                 [
-                  Professor('Dr. Smith', 'Computer Science'),
-                  Student('Alice'),
+                  Professor('Dr. Wang', 'Computer Science'),
+                  Student('Aana'),
                 ],
               )
             ],

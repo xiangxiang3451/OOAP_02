@@ -25,15 +25,19 @@ class Professor implements UniversityComponent {
 class Course implements UniversityComponent {
   final String name;
   final String department;
+  final List<UniversityComponent> components;
 
-  Course(this.name, this.department);
+  Course(this.name, this.department, this.components);
 
   @override
   Widget displayDetails() {
-    return ListTile(
+    return ExpansionTile(
+      collapsedTextColor: Colors.lightBlue,
+      backgroundColor: Colors.white54,
       title: Text('Course: $name'),
       subtitle: Text('Department: $department'),
       leading: const Icon(Icons.book),
+      children: components.map((component) => component.displayDetails()).toList(),
     );
   }
 }
@@ -65,8 +69,7 @@ class Department implements UniversityComponent {
       collapsedTextColor: Colors.lightBlue,
       backgroundColor: Colors.white54,
       title: Text(' $name'),
-      children:
-          components.map((component) => component.displayDetails()).toList(),
+      children: components.map((component) => component.displayDetails()).toList(),
     );
   }
 }
@@ -100,25 +103,48 @@ class UniversityStructurePage extends StatelessWidget {
           Department(
             'Computer Science',
             [
-              Professor('Dr. Smith', 'Computer Science'),
-              Course('Introduction to Programming', 'Computer Science'),
-              Student('Alice'),
+              Course(
+                'Introduction to Programming',
+                'Computer Science',
+                [
+                  Professor('Dr. Smith', 'Computer Science'),
+                  Student('Alice'),
+                ],
+              ),
+            Course(
+                'OOAP',
+                'Computer Science',
+                [
+                  Professor('Dr. Smith', 'Computer Science'),
+                  Student('Alice'),
+                ],
+              )
             ],
           ).displayDetails(),
           Department(
             'Mathematics',
             [
-              Professor('Dr. Johnson', 'Mathematics'),
-              Course('Calculus', 'Mathematics'),
-              Student('Bob'),
+              Course(
+                'Calculus',
+                'Mathematics',
+                [
+                  Professor('Dr. Johnson', 'Mathematics'),
+                  Student('Bob'),
+                ],
+              ),
             ],
           ).displayDetails(),
           Department(
             'Art Design',
             [
-              Professor('Dr. Chang', 'Art Design'),
-              Course('Drawing', 'Art Design'),
-              Student('Peter'),
+              Course(
+                'Drawing',
+                'Art Design',
+                [
+                  Professor('Dr. Chang', 'Art Design'),
+                  Student('Peter'),
+                ],
+              ),
             ],
           ).displayDetails(),
         ],

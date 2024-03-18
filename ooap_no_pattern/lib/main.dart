@@ -12,8 +12,10 @@ class Professor {
 class Course {
   final String name;
   final String department;
+  final List<Professor> professors;
+  final List<Student> students;
 
-  Course(this.name, this.department);
+  Course(this.name, this.department, {this.professors = const [], this.students = const []});
 }
 
 // **************** Student class **********
@@ -26,14 +28,12 @@ class Student {
 //**************  Department class *********
 class Department {
   final String name;
-  final List<Professor> professors;
   final List<Course> courses;
-  final List<Student> students;
 
-  Department(this.name, {this.professors = const [], this.courses = const [], this.students = const []});
+  Department(this.name, {this.courses = const []});
 }
 
-// *************************  Clent  ***********************
+// *************************  Client  ***********************
 class UniversityStructureApp extends StatelessWidget {
   const UniversityStructureApp({super.key});
 
@@ -47,7 +47,7 @@ class UniversityStructureApp extends StatelessWidget {
 }
 
 class UniversityStructurePage extends StatelessWidget {
-  const UniversityStructurePage({super.key});
+  const UniversityStructurePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,36 +61,66 @@ class UniversityStructurePage extends StatelessWidget {
         children: <Widget>[
           _buildDepartment(
             'Computer Science',
-            professors: [Professor('Dr. Smith', 'Computer Science')],
-            courses: [Course('Introduction to Programming', 'Computer Science')],
-            students: [Student('Alice')],
+            courses: [
+              Course(
+                'Introduction to Programming',
+                'Computer Science',
+                professors: [Professor('Dr. Smith', 'Computer Science')],
+                students: [Student('Alice')],
+              ),
+              Course(
+                'OOAP',
+                'Computer Science',
+                professors: [Professor('Dr. Wang', 'Computer Science')],
+                students: [Student('Chang')],
+              ),
+            ],
           ),
           _buildDepartment(
             'Mathematics',
-            professors: [Professor('Dr. Johnson', 'Mathematics')],
-            courses: [Course('Calculus', 'Mathematics')],
-            students: [Student('Bob')],
+            courses: [
+              Course(
+                'Calculus',
+                'Mathematics',
+                professors: [Professor('Dr. Johnson', 'Mathematics')],
+                students: [Student('Bob')],
+              ),
+            ],
           ),
           _buildDepartment(
             'Art Design',
-            professors: [Professor('Dr. Chang', 'Art Design')],
-            courses: [Course('Drawing', 'Art Design')],
-            students: [Student('Peter')],
+            courses: [
+              Course(
+                'Drawing',
+                'Art Design',
+                professors: [Professor('Dr. Chang', 'Art Design')],
+                students: [Student('Peter')],
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDepartment(String name, {List<Professor>? professors, List<Course>? courses, List<Student>? students}) {
+  Widget _buildDepartment(String name, {List<Course>? courses}) {
     return ExpansionTile(
       collapsedTextColor: Colors.lightBlue,
       backgroundColor: Colors.white54,
       title: Text(' $name'),
+      children: courses!.map((course) => _buildCourseTile(course)).toList(),
+    );
+  }
+
+  Widget _buildCourseTile(Course course) {
+    return ExpansionTile(
+      collapsedTextColor: Colors.lightBlue,
+      backgroundColor: Colors.white70,
+      title: Text('Course: ${course.name}'),
+      subtitle: Text('Department: ${course.department}'),
       children: [
-        if (professors != null) ...professors.map((professor) => _buildProfessorTile(professor)).toList(),
-        if (courses != null) ...courses.map((course) => _buildCourseTile(course)).toList(),
-        if (students != null) ...students.map((student) => _buildStudentTile(student)).toList(),
+        ...course.professors.map((professor) => _buildProfessorTile(professor)).toList(),
+        ...course.students.map((student) => _buildStudentTile(student)).toList(),
       ],
     );
   }
@@ -100,14 +130,6 @@ class UniversityStructurePage extends StatelessWidget {
       title: Text('Professor: ${professor.name}'),
       subtitle: Text('Department: ${professor.department}'),
       leading: const Icon(Icons.person),
-    );
-  }
-
-  Widget _buildCourseTile(Course course) {
-    return ListTile(
-      title: Text('Course: ${course.name}'),
-      subtitle: Text('Department: ${course.department}'),
-      leading: const Icon(Icons.book),
     );
   }
 
